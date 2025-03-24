@@ -1,0 +1,52 @@
+@import "../../styles/variable.scss";
+
+.profile_page_wrapper {
+  width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vh;
+  .img_wrapper {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    img {
+      height: 100%;
+    }
+    .detail_container {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-evenly;
+      p {
+        font-family: $font-stack-primary;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .smallCap {
+        font-weight: normal !important;
+        font-size: 16px !important;
+      }
+    }
+  }
+
+  .edit_button_wrapper {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    button {
+      background: $buttonGradient;
+      color: white;
+      font-family: $font-stack-primary;
+      border-radius: 2vh;
+    }
+  }
+}
+
+.hrWrapper {
+  width: 100%;
+  margin-top: 5vh;
+  padding: 1vh;
+}

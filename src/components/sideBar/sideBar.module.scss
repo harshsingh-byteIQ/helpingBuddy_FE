@@ -1,0 +1,72 @@
+@import "../../styles/variable.scss";
+
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: end;
+  font-family: $font-stack-secondary;
+
+  .titleFirst {
+    letter-spacing: 3px;
+    font-size: 35px;
+    font-weight: lighter;
+    font-family: $font-stack-secondary;
+  }
+  .titleSecond {
+    letter-spacing: 3px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.menuList {
+  width: 90%;
+}
+
+
+.active {
+  height: 6vh;
+  background-color: white !important;
+  margin: 5% 0% 5% 0%;
+  border-radius: 5vh;
+  display: flex;
+  justify-content: space-between;
+  padding: 13px;
+  align-items: center;
+  font-family: $font-stack-primary;
+  cursor: pointer;
+  color: black !important;
+  font-size: 14px;
+
+  .icon {
+    color: black !important;
+  }
+}
+
+.menuItem {
+    height: 6vh;
+    background-color: rgba(229, 214, 236, 50%);
+    margin: 5% 0% 5% 0%;
+    border-radius: 5vh;
+    display: flex;
+    justify-content: space-between;
+    padding: 13px;
+    align-items: center;
+    font-family: $font-stack-primary;
+    cursor: pointer;
+    color: black;
+    font-size: 14px;
+  }
+
+.icon {
+  color: white !important;
+}

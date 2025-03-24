@@ -1,0 +1,43 @@
+@import "../styles//variable.scss";
+
+.sideBarWrapper {
+  height: 100vh !important;
+  color: white;
+  overflow: hidden;
+  background: $sideBarGradient;
+  position: fixed;
+  width: 18%;
+}
+
+.headerWrapper {
+  height: 100%;
+  width: 100%;
+  background-color: $primary;
+  padding: 0 !important;
+}
+
+.header {
+  padding: 0px !important;
+}
+
+[class^="ant-layout-sider"] {
+  background-color: $sideBarGradient !important;
+}
+
+.content_wrapper_global {
+  height: 100dvh;
+  width: 100dvw;
+  background-color: #7c51a5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content_wrapper_protected {
+  scrollbar-width: none;
+  overflow: auto;
+}
+
+.layoutWrapper {
+  scrollbar-width: none;
+}

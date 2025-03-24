@@ -1,0 +1,23 @@
+.tabs_wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .first_div {
+    flex: 1;
+    background-color: red;
+  }
+
+  .second_div {
+    flex: 8;
+  }
+
+  .third_div {
+    flex: 1;
+    background-color: pink;
+  }
+  .btn_style_postponded{
+    background-color: #D6F3F3;
+    color: #02A3F7;
+  }
+}
