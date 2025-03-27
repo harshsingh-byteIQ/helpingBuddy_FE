@@ -1,9 +1,6 @@
 import styles from "./auth.module.scss";
 import img from "../../assets/authPage.png";
 import { Button, Input } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-
-import "../../styles/variable.scss";
 import { useNavigate } from "react-router-dom";
 
 const stylesInline = {

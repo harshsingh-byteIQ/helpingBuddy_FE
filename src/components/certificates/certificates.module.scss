@@ -1,0 +1,80 @@
+@use "../../styles/variable.scss" as *;
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .headers {
+    font-family: $font-stack-primary;
+  }
+
+  .content {
+    width: 100%;
+    margin-top: 4vh;
+    p {
+      font-family: $font-stack-primary;
+    }
+  }
+
+  .tabsCol {
+    width: 70%;
+    margin-top: 5dvh;
+  }
+}
+
+.OverallWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.OverAllContent {
+  height: 30vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  p {
+    font-family: $font-stack-primary;
+    font-size: 16px !important;
+  }
+}
+
+.CertiWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.certiContent {
+  height: 45vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  p {
+    font-family: $font-stack-primary;
+    font-size: 16px !important;
+  }
+}
+
+.PointsContent {
+  height: 30vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  p {
+    font-family: $font-stack-primary;
+    font-size: 16px !important;
+  }
+}

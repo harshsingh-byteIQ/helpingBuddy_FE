@@ -1,13 +1,21 @@
-@import "../styles/variable.scss";
+@use "./variable" as *;
 
 [class^="ant-layout-sider"] {
   background-color: $sideBarGradient !important;
 }
 
-.container_margin{
-    margin: 20px !important;
-    height: 82.6dvh;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 7px 29px 0px rgba(104, 107, 121, 0.4);
+.container_margin {
+  margin: 20px !important;
+  height: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 7px 29px 0px rgba(104, 107, 121, 0.4);
+}
+
+.tabs {
+  border: 1px solid black;
+  height: 100%;
+  width: 100%;
+  border-radius: 1vh;
+  padding: 1vh;
 }

@@ -1,14 +1,13 @@
 import styles from "./auth.module.scss";
 import img from "../../assets/authPage.png";
-import { Button, Input  } from "antd";
+import { Button, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import "../../styles/variable.scss";
+import "../../styles/_variable.scss";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const stylesInline = {
   container: {
     width: "55%",
-    
   },
   heading: {
     fontSize: "24px",
@@ -30,7 +29,7 @@ const stylesInline = {
     border: "none",
     fontSize: "16px",
     fontWeight: "bold",
-    fontFamily: `$font-stack-primary`
+    fontFamily: `$font-stack-primary`,
   },
   footerText: {
     marginTop: "10px",
@@ -44,10 +43,14 @@ const stylesInline = {
 };
 
 const Register = () => {
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigation();
 
   const handleSpanClick = () => {
-    navigate("/");
+    goTo("/register");
+  };
+
+  const handleLoginClick = () => {
+    goTo("/profile");
   };
 
   return (
@@ -76,7 +79,11 @@ const Register = () => {
               style={stylesInline.input}
             />
 
-            <Button type="primary" style={stylesInline.button}>
+            <Button
+              type="primary"
+              style={stylesInline.button}
+              onClick={handleLoginClick}
+            >
               Login
             </Button>
 

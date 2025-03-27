@@ -1,0 +1,57 @@
+@use "../../styles/variable" as *;
+
+.meeting_details_wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .user_info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .third_div {
+      button {
+        background-color: $successBtnBg;
+        color: $successBtnTx;
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: none;
+        font-family: $font-stack-primary;
+        font-weight: 12px;
+        border-radius: 18px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .first_div {
+    width: 60%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20%;
+  }
+
+  .user_questions {
+    height: 60vh;
+    width: 100%;
+    border: 1px solid gray !important;
+    border-radius: 10px;
+    margin-top: 5vh;
+    background-color: gray;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scrollbar-color: gray;
+    ::-webkit-scrollbar-corner::after {
+      nav-down: auto;
+    }
+  }
+
+  .footer_wrapper {
+    padding: 2px;
+    margin-top: 2vh;
+  }
+}

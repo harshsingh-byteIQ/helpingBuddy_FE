@@ -1,0 +1,46 @@
+@use "../../../styles/variable.scss" as *;
+
+.tabsWrapper {
+  width: 100%;
+}
+
+.tabs_header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #d9d9d9;
+  border-radius: 5vh;
+
+  .tab_Items {
+    margin: 5px;
+    flex: 1;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5vh;
+    font-family: $font-stack-primary !important;
+    cursor: pointer;
+  }
+
+  .active {
+    flex: 2;
+    background-color: #7c51a5 !important;
+    color: white !important;
+  }
+}
+
+.tabs_content {
+  padding: auto;
+  width: 100%;
+  margin-top: 5dvh;
+
+  p {
+    color: $primary;
+    font-size: 22px
+  }
+}
+
+

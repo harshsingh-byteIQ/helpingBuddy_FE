@@ -1,12 +1,14 @@
-$primary: #7C51A5;
-$primaryBg: #EAEDFD;
+$primary: #7c51a5;
+$primaryBg: #eaedfd;
 $secondary: #54afdb;
-$sideBarGradient : linear-gradient(180deg, #B378EA 0%, #654484 60%);
-$buttonGradient : linear-gradient(90deg, #BB6EFF 0%, #704299 100%);
+$sideBarGradient: linear-gradient(180deg, #b378ea 0%, #654484 60%);
+$buttonGradient: linear-gradient(90deg, #bb6eff 0%, #704299 100%);
 $thirdColor: #797979;
 $fourthColor: #f6f9ff;
 $black: #000;
 $white: #fff;
+$successBtnBg: #c9f6cd;
+$successBtnTx: #0baa1b;
 $smokewhite: #f1f1f1;
 $gray: #636363;
 $headingGray: rgba(59, 54, 54, 1);
@@ -14,15 +16,17 @@ $grey: #f1f1f1;
 $textColor: rgba(59, 54, 54, 1);
 $backGroundTab: rgba(36, 126, 158, 1);
 $tabBgColor: #eaf0f2;
-$font-stack-primary: 'Poppins', sans-seri;
-$font-stack-secondary: 'Oswald';
+$font-stack-primary: "Poppins", sans-seri;
+$font-stack-secondary: "Oswald";
 
 :root {
   --font-stack-primary: $font-stack-primary;
   --font-stack-secondary: $font-stack-secondary;
   --primary: $primary;
-  --sideBarGradient : $sideBarGradient
-  --buttonGradient : $buttonGradient
+  --successBtnBg: $successBtnBg;
+  --successBtnTx: $successBtnTx;
+  --sideBarGradient: $sideBarGradient;
+  --buttonGradient: $buttonGradient;
   --primaryLight: rgba($primary, 0.1);
   --secondary: $secondary;
   --secondaryLight: rgba($secondary, 0.1);

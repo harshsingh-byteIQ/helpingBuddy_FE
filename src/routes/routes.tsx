@@ -6,6 +6,9 @@ import RoleSelect from "../components/auth/roleSelect";
 import Question from "../components/auth/collectInfo";
 import Contact from "../components/contact";
 import Appointments from "../components/appointments";
+import Certificates from "../components/certificates";
+import MeetingDetails from "../components/meetingDetails";
+import ManageUsers from "../components/manageUsers";
 
 interface RouterBase {
   path: string;
@@ -23,7 +26,7 @@ export const proctectedRoutes: RouterBase[] = [
   },
   {
     path: "/Certificates",
-    element: <Profile></Profile>,
+    element: <Certificates></Certificates>,
   },
   {
     path: "/Settings",
@@ -41,17 +44,24 @@ export const proctectedRoutes: RouterBase[] = [
     path: "/about",
     element: <Contact></Contact>,
   },
+  {
+    path: "/meeting-details",
+    element: <MeetingDetails></MeetingDetails>,
+  },
+  {
+    path: "/manage-users",
+    element: <ManageUsers></ManageUsers>,
+  },
 ];
 
 export const globalRoutes: RouterBase[] = [
-  
   {
     path: "/",
-    element: <Login></Login>,
+    element: <Register></Register>,
   },
   {
     path: "/register",
-    element: <Register></Register>,
+    element: <Login></Login>,
   },
   {
     path: "/roles",

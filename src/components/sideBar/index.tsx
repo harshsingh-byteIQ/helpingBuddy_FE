@@ -1,16 +1,11 @@
 import { Icon } from "@iconify/react";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import styles from "./sideBar.module.scss";
-import { useNavigate } from "react-router-dom";
+import { menuListType } from "../../utils/Types";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const SideBar = () => {
-  interface menuListType {
-    title: string;
-    lable: string;
-    Icon: ReactNode;
-    className: string;
-  }
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigation();
 
   const [menuList, setMenuList] = useState<menuListType[]>([
     {
@@ -103,8 +98,12 @@ const SideBar = () => {
       };
     });
     setMenuList(newMenuList);
-    navigate(`/${title}`);
+    goTo(`/${title}`);
   };
+
+  const handleLogout = () => {
+    goTo("/");
+  }
 
   return (
     <div className={styles.sideBar}>
@@ -128,7 +127,7 @@ const SideBar = () => {
         })}
       </div>
       <div className={styles.menuList}>
-        <div className={`${styles.menuItem}`}>
+        <div className={`${styles.menuItem}`} onClick={handleLogout}>
           {"Logout"}
           {
             <Icon

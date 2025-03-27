@@ -1,7 +1,6 @@
 import styles from "./auth.module.scss";
 import img from "../../assets/authPage.png";
-import { Button, Input, Tabs } from "antd";
-import "../../styles/variable.scss";
+import { Button } from "antd";
 import { useState } from "react";
 
 const RoleSelect = () => {

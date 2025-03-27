@@ -1,4 +1,4 @@
-@import "../../styles/variable.scss";
+@use "../../styles/variable.scss" as *;
 
 .profile_page_wrapper {
   width: 100%;
@@ -9,7 +9,7 @@
   padding: 1vh;
   .img_wrapper {
     height: 100%;
-    width: 40%;
+    width: 50%;
     display: flex;
     justify-content: space-between;
     img {
@@ -17,13 +17,15 @@
     }
     .detail_container {
       display: flex;
-      height: 100%;
       flex-direction: column;
       justify-content: space-evenly;
+      align-items: start;
+      margin-left: 3vw;
       p {
         font-family: $font-stack-primary;
         font-weight: bold;
         font-size: 18px;
+        
       }
       .smallCap {
         font-weight: normal !important;

@@ -3,6 +3,7 @@ import img from "../../assets/authPage.png";
 import { Button, Col, Input, Row } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const stylesInline = {
   container: {
@@ -41,10 +42,13 @@ const stylesInline = {
 };
 
 const Login = () => {
-  const navigate = useNavigate();
-
+  const { goTo } = useAppNavigation();
   const handleSpanClick = () => {
-    navigate("/register");
+    goTo("/");
+  };
+
+  const handleRegisterClick = () => {
+    goTo("/questions");
   };
 
   return (
@@ -91,7 +95,7 @@ const Login = () => {
               style={stylesInline.input}
             />
 
-            <Button type="primary" style={stylesInline.button}>
+            <Button type="primary" style={stylesInline.button} onClick={handleRegisterClick}>
               Create Account
             </Button>
 
