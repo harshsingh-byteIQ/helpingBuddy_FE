@@ -1,14 +1,12 @@
 import styles from "./auth.module.scss";
 import img from "../../assets/authPage.png";
-import { Button, Input } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button, Form, Input } from "antd";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const stylesInline = {
   container: {
-    width: "60%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "end",
   },
   heading: {
     fontSize: "24px",
@@ -44,11 +42,11 @@ const stylesInline = {
 };
 
 const Question = () => {
+  const { goTo } = useAppNavigation();
+  const [form] = Form.useForm();
 
-  const navigation = useNavigate();
-  
   const handleSubmit = () => {
-    navigation('/profile')
+    goTo('/')
   }
 
   return (
@@ -64,32 +62,49 @@ const Question = () => {
           </div>
         </div>
         <div className={styles.authContent}>
-          <div style={stylesInline.container}>
+          <div style={{ width: "60%" }}>
             <h1 style={stylesInline.heading}>Help us get to know you better</h1>
 
-            <Input
-              placeholder="Please provide your hobbies"
-              style={stylesInline.input}
-            />
-            <Input
-              placeholder="Please provide your fav songs"
-              style={stylesInline.input}
-            />
-            <Input placeholder="Your interest's" style={stylesInline.input} />
-            <Input placeholder="Political view" style={stylesInline.input} />
-            <Input placeholder="Gaming type" style={stylesInline.input} />
-            <Input
-              placeholder="Fav Football Player"
-              style={stylesInline.input}
-            />
-            <Input
-              placeholder="Anything else you want to share"
-              style={stylesInline.input}
-            />
+            <Form
+              form={form}
 
-            <Button onClick={handleSubmit} type="primary" style={stylesInline.button}>
-              Submit
-            </Button>
+              onFinish={handleSubmit}
+              style={{ maxWidth: 600, margin: '0 auto' }}
+            >
+              <Form.Item label="Your city" name="city">
+                <Input placeholder="Enter your City" style={stylesInline.input} />
+              </Form.Item>
+
+              <Form.Item label="Your Address" name="address">
+                <Input placeholder="Your Address" style={stylesInline.input} />
+              </Form.Item>
+
+              <Form.Item label="Your state" name="state">
+                <Input placeholder="Enter your State Name" style={stylesInline.input} />
+              </Form.Item>
+
+              <Form.Item label="Your zip code" name="zip code">
+                <Input placeholder="Enter your zip code" style={stylesInline.input} />
+              </Form.Item>
+
+              <Form.Item label="Fav Football Player" name="favoriteFootballPlayer">
+                <Input placeholder="Enter your favorite football player" style={stylesInline.input} />
+              </Form.Item>
+
+              <Form.Item label="Anything else you want to share" name="additionalInfo">
+                <Input.TextArea
+                  rows={4}
+                  placeholder="Enter anything else you want to share"
+                  style={{ ...stylesInline.input, resize: 'none' }}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" style={stylesInline.button}>
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
         </div>
       </div>

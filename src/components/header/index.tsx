@@ -1,22 +1,30 @@
-import { useLocation } from "react-router-dom";
 import styles from "./header.module.scss";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { manageChange } from "../../redux/sidebarSlice";
+
 
 const HeaderComponent = () => {
-  const location = useLocation();
-  const [pageName, setPageName] = useState("Profile");
 
-  useEffect(() => {
-    setPageName(location?.pathname?.substring(1, location?.pathname?.length));
-  }, [location?.pathname]);
+  const pageName = useSelector((state: RootState) => state?.sidebar?.name)
+  const { goTo } = useAppNavigation();
+  const dispatch = useDispatch();
+
+
+  const handleNavigation = () => {
+    dispatch(manageChange({ name: "Profile", isReload: true }));
+    goTo("Profile")
+  }
 
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.navigationBar}> {` < ${pageName} `}</div>
       <div className={styles.iconContainer}>
         <Icon icon="basil:notification-outline" width="28" height="28" />
-        <Icon icon="iconamoon:profile-fill" width="28" height="28" />
+        <Icon icon="iconamoon:profile-fill" width="28" height="28" onClick={handleNavigation} />
       </div>
     </div>
   );

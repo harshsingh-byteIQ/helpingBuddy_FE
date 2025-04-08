@@ -9,6 +9,11 @@ import Appointments from "../components/appointments";
 import Certificates from "../components/certificates";
 import MeetingDetails from "../components/meetingDetails";
 import ManageUsers from "../components/manageUsers";
+import Home from "../components/videoCall/home";
+import Room from "../components/videoCall/rome";
+import ManageRequests from "../components/requests";
+import MeetSomeone from "../components/meetsomeone";
+import RequestDetails from "../components/requestDetails";
 
 interface RouterBase {
   path: string;
@@ -49,9 +54,29 @@ export const proctectedRoutes: RouterBase[] = [
     element: <MeetingDetails></MeetingDetails>,
   },
   {
-    path: "/manage-users",
+    path: "/Manage",
     element: <ManageUsers></ManageUsers>,
   },
+  {
+    path: "/video",
+    element: <Home />,
+  },
+  {
+    path: "/room/:roomCode",
+    element: <Room />,
+  },
+  {
+    path: "requests",
+    element: <ManageRequests></ManageRequests>
+  },
+  {
+    path: "meet",
+    element: <MeetSomeone></MeetSomeone>
+  },
+  {
+    path: "request-details",
+    element: <RequestDetails></RequestDetails>
+  }
 ];
 
 export const globalRoutes: RouterBase[] = [
@@ -62,10 +87,6 @@ export const globalRoutes: RouterBase[] = [
   {
     path: "/register",
     element: <Login></Login>,
-  },
-  {
-    path: "/roles",
-    element: <RoleSelect></RoleSelect>,
   },
   {
     path: "/questions",

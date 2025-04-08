@@ -4,6 +4,10 @@ import { ButtonType, MeetingTypes } from "../utils/Enums";
 export interface TabsPropsType {
   meeting_status_type: MeetingTypes;
   button_types: ButtonType;
+  name : string;
+  time : string;
+  id ? : number;
+  setReload : () =>  void
 }
 
 export interface menuListType {
@@ -16,11 +20,11 @@ export interface menuListType {
 export interface tabs {
   label: string;
   content: ReactNode;
-  manageTabChange?: () => void;
-  activeTab?: number;
-  setActiveTab?: (index: number) => void;
 }
 
 export interface TabsProps {
   tabs: tabs[];
+  activeTab?: number;
+  setActiveTab?: (index: number) => void;
+  manageTabChange?: () => void;
 }
