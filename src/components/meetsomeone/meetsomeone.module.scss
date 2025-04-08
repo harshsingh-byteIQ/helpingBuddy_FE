@@ -1,0 +1,50 @@
+@use "../../styles/variable" as *;
+
+.someOneImage {
+    height: 30dvh;
+    width: 50%;
+}
+
+.meetSomeOneHeaderText {
+    display: flex;
+    gap: 3vh;
+    flex-direction: column;
+    justify-content: end;
+    align-items: end;
+
+    .text_one {
+        color: $primary;
+        font-family: $font-stack-primary;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .text_two {
+        font-family: $font-stack-primary;
+        font-size: 18px;
+    }
+
+    .text_three {
+        font-family: $font-stack-primary;
+        font-size: 18px;
+    }
+}
+
+.line_wrapper {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 100%;
+}
+
+.line {
+    height: 1px;
+    width: 100%;
+    color: $primary;
+    background-color: $primary;
+}
+
+.submit_button_wrapper{
+    margin: 5vh;
+}
+
+

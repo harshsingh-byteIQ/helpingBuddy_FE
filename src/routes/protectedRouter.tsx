@@ -1,9 +1,9 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, } from "react-router-dom";
 import { proctectedRoutes } from "./routes";
 import ProtectedLayout from "../layouts/ProtectedLayout";
 
-
 const ProtectedRouter = () => {
+
   return (
     <Routes>
       <Route element={<ProtectedLayout></ProtectedLayout>}>

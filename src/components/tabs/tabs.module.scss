@@ -1,7 +1,10 @@
+@use "../../styles/variable" as *;
+
 .tabs_wrapper {
   display: flex;
   width: 100%;
   height: 15dvh;
+
   .first_div {
     flex: 1;
     display: flex;
@@ -16,6 +19,11 @@
     flex-direction: column;
     align-items: start;
     margin-left: 3vw !important;
+    h4{
+      font-weight: 600;
+      font-family: $font-stack-primary;
+      font-size: 16px;
+    }
   }
 
   .third_div {
@@ -23,6 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1vw;
 
     .cancleBtn {
       padding: 6px;
@@ -30,11 +39,27 @@
       border-radius: 1vh;
       background-color: #d92e2e;
       color: white;
+      width: 8vw;
     }
+
     .cancleBtn:hover {
       cursor: pointer;
     }
+
+    .viewProfileBtn {
+      padding: 6px;
+      border: none;
+      border-radius: 1vh;
+      background-color: #4343FF;
+      color: white;
+      width: 8vw;
+    }
+
+    .viewProfileBtn:hover {
+      cursor: pointer;
+    }
   }
+
   .btn_style_postponded {
     background-color: #d6f3f3;
     color: #02a3f7;
@@ -54,6 +79,10 @@
     color: #ff3232;
     padding: 5px;
     border-radius: 5vh;
+  }
+
+  .btn_style_none{
+    display: none;
   }
 }
 

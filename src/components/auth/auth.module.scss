@@ -67,3 +67,17 @@
 //     width: 55%;,
 //     display: flex: ;;
 // }
+
+.submit_btn_style{
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.selectSlotOption{
+  margin-top: 2vh;
+
+  p{
+    font-size: 18px;
+  }
+}

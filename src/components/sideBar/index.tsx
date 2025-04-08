@@ -1,107 +1,291 @@
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./sideBar.module.scss";
 import { menuListType } from "../../utils/Types";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { clearRole } from "../../redux/authSlice";
+
+
+const StudentSideBarOption: menuListType[] = [
+  {
+    title: "Profile",
+    lable: "Profile",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="iconamoon:profile-fill"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.active}`,
+  },
+  {
+    title: "Appointments",
+    lable: "Appointments",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="teenyicons:appointments-outline"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Certificates",
+    lable: "Certificates",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="ph:certificate"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "About us",
+    lable: "About",
+    Icon: (
+      <Icon className={styles.icon} icon="ix-about" width="24" height="24" />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Contact us",
+    lable: "Contact",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:contact-support-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Settings",
+    lable: "Settings",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:settings-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+]
+const PatientsSideBarOption: menuListType[] = [
+  {
+    title: "Profile",
+    lable: "Profile",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="iconamoon:profile-fill"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.active}`,
+  },
+  {
+    title: "Appointments",
+    lable: "Appointments",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="teenyicons:appointments-outline"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Meet someone",
+    lable: "meet",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="ph:certificate"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "About us",
+    lable: "About",
+    Icon: (
+      <Icon className={styles.icon} icon="ix-about" width="24" height="24" />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Contact us",
+    lable: "Contact",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:contact-support-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Settings",
+    lable: "Settings",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:settings-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+]
+const AdminSideBarOption: menuListType[] = [
+  {
+    title: "Profile",
+    lable: "Profile",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="iconamoon:profile-fill"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.active}`,
+  },
+  {
+    title: "Manage users",
+    lable: "Manage",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="teenyicons:appointments-outline"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Requests",
+    lable: "Requests",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="ph:certificate"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "About us",
+    lable: "About",
+    Icon: (
+      <Icon className={styles.icon} icon="ix-about" width="24" height="24" />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Contact us",
+    lable: "Contact",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:contact-support-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
+    title: "Settings",
+    lable: "Settings",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="material-symbols:settings-outline-rounded"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+]
+
 
 const SideBar = () => {
   const { goTo } = useAppNavigation();
+  const dispatch = useDispatch();
 
-  const [menuList, setMenuList] = useState<menuListType[]>([
-    {
-      title: "Profile",
-      lable: "Profile",
-      Icon: (
-        <Icon
-          className={styles.icon}
-          icon="iconamoon:profile-fill"
-          width="24"
-          height="24"
-        />
-      ),
-      className: `${styles.active}`,
-    },
-    {
-      title: "Appointments",
-      lable: "Appointments",
-      Icon: (
-        <Icon
-          className={styles.icon}
-          icon="teenyicons:appointments-outline"
-          width="24"
-          height="24"
-        />
-      ),
-      className: `${styles.menuItem}`,
-    },
-    {
-      title: "Certificates",
-      lable: "Certificates",
-      Icon: (
-        <Icon
-          className={styles.icon}
-          icon="ph:certificate"
-          width="24"
-          height="24"
-        />
-      ),
-      className: `${styles.menuItem}`,
-    },
-    {
-      title: "About us",
-      lable: "About",
-      Icon: (
-        <Icon className={styles.icon} icon="ix-about" width="24" height="24" />
-      ),
-      className: `${styles.menuItem}`,
-    },
-    {
-      title: "Contact us",
-      lable: "Contact",
-      Icon: (
-        <Icon
-          className={styles.icon}
-          icon="material-symbols:contact-support-outline-rounded"
-          width="24"
-          height="24"
-        />
-      ),
-      className: `${styles.menuItem}`,
-    },
-    {
-      title: "Settings",
-      lable: "Settings",
-      Icon: (
-        <Icon
-          className={styles.icon}
-          icon="material-symbols:settings-outline-rounded"
-          width="24"
-          height="24"
-        />
-      ),
-      className: `${styles.menuItem}`,
-    },
-  ]);
+
+  const [menuList, setMenuList] = useState<menuListType[]>(AdminSideBarOption);
+
+  const role = useSelector((state: RootState) => state?.auth?.role);
+
 
   const handlePageChange = (title: string) => {
-    const newMenuList: menuListType[] = menuList.map((ele: menuListType) => {
-      console.log(title, ele?.title?.split(" ")?.[0]);
-      if (ele?.title?.split(" ")?.[0] === title) {
+    try {
+      const newMenuList: menuListType[] = menuList.map((ele: menuListType) => {
+        console.log(ele?.title , title , )
+
+        if (ele?.title?.split(" ")?.[0] === title) {
+          return {
+            ...ele,
+
+            className: `${styles.active}`,
+          };
+        }
         return {
           ...ele,
-          className: `${styles.active}`,
+          className: `${styles.menuItem}`,
         };
-      }
-      return {
-        ...ele,
-        className: `${styles.menuItem}`,
-      };
-    });
-    setMenuList(newMenuList);
-    goTo(`/${title}`);
+      });
+      setMenuList(newMenuList);
+    } catch (error) {
+      console.error(error)
+    } finally {
+      console.log(title, "heyy")
+      goTo(`/${title}`);
+    }
+
   };
 
+  useEffect(() => {
+    if (role === "admin") {
+      setMenuList(AdminSideBarOption)
+    } else if (role === "patient") {
+      setMenuList(PatientsSideBarOption);
+    } else {
+      setMenuList(StudentSideBarOption);
+    }
+  }, [role])
+
+
   const handleLogout = () => {
+    dispatch(clearRole())
     goTo("/");
   }
 
