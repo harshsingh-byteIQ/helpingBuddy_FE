@@ -1,53 +1,71 @@
 import styles from "./auth.module.scss";
-import img from "../../assets/authPage.png";
-import { Button, Form, Input } from "antd";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import usePost from "../../hooks/usePost";
+import { toast } from "react-toastify";
+import { AnswerSubmitPayload, AnswerSubmitResponse, AnswerType, getQuestionResponse } from "../../utils/Types";
+import useFetch from "../../hooks/useFetch";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
-
-const stylesInline = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  heading: {
-    fontSize: "24px",
-    fontWeight: "400",
-    marginBottom: "20px",
-  },
-  input: {
-    width: "100%",
-    height: "30px",
-    borderRadius: "8px",
-    marginBottom: "15px",
-    fontSize: "16px",
-  },
-  button: {
-    width: "30%",
-    height: "30px",
-    borderRadius: "5px",
-    background: "linear-gradient(to right, #BB6EFF, #704299)",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: "light",
-    fontFamily: `$font-stack-primary`,
-  },
-  footerText: {
-    marginTop: "10px",
-    fontSize: "14px",
-    color: "#666",
-  },
-  span: {
-    color: "#BB6EFF",
-    cursor: "pointer",
-  },
-};
+import { Button, Form, Input, Select, Spin } from "antd";
+import img from "../../assets/authPage.png";
 
 const Question = () => {
   const { goTo } = useAppNavigation();
   const [form] = Form.useForm();
 
-  const handleSubmit = () => {
-    goTo('/')
+  const { data, loading, error } = useFetch<[getQuestionResponse]>("/questions")
+
+  const { postData, error: submitError, loading: answerSubmitLoading } = usePost<AnswerSubmitResponse, AnswerSubmitPayload>("/answers/")
+
+  const [filteredData, setFilteredData] = useState<getQuestionResponse[]>();
+
+  const role = useSelector((state: RootState) => state.auth.role)
+  const id = useSelector((state: RootState) => state.auth.id)
+
+  const handleSubmit = async (data: any) => {
+
+
+    // Step 1: Filter out entries where key or value is null
+    const newData = Object.fromEntries(
+      Object.entries(data).filter(([key, value]) => key !== "additionalInfo" && value !== null)
+    );
+
+    // Step 2: Map filtered object to AnswerType[]
+    const mapped: AnswerType[] = Object.entries(newData).map(([key, value]) => ({
+      question_id: Number(key),
+      user_id: id !== null ? Number(id) : 0,
+      answer: value
+    }));
+    try {
+      const result = await postData({
+        "answer": mapped
+      });
+
+      if (result.status_code === 200) {
+        toast.success(result?.message);
+        goTo("/profile")
+      } else {
+        toast.warning("please check email or password")
+      }
+    } catch (err) {
+      console.error(error)
+      toast.warning("wrong email or password")
+    }
   }
+
+  useEffect(() => {
+    console.log("role in effect:", role);
+    const newData = data?.filter((ele: getQuestionResponse) => {
+      console.log("Filtering:", ele, "question_for:", ele?.question_for, "vs role:", role);
+      return ele?.question_for === role;
+    });
+  
+    
+    setFilteredData(newData);
+    
+  }, [data, role]); // 👈 role should be in dependency array too!
+  
 
   return (
     <>
@@ -62,53 +80,64 @@ const Question = () => {
           </div>
         </div>
         <div className={styles.authContent}>
-          <div style={{ width: "60%" }}>
-            <h1 style={stylesInline.heading}>Help us get to know you better</h1>
+          <h1 className={styles.heading}>Help us get to know you better</h1>
+          <div style={{ width: "70%", height: "60vh", overflowY: "scroll" }}>
+            <Spin spinning={loading}>
+              <Form
+                form={form}
+                onFinish={handleSubmit}
+                layout="vertical"
+                style={{ maxWidth: 600, margin: "0 auto" }}
+              >
+                {filteredData?.map((ele: getQuestionResponse, index: number) => (
+                  <Form.Item
+                    key={index}
+                    name={ele?.question_id}
+                    label={ele.content}
+                    rules={[{ required: true, message: "This field is required" }]}
+                  >
+                    {ele.options ? (
+                      <Select placeholder={`Select ${ele.content}`} className={styles.input}>
+                        {ele.options?.map((option, idx) => (
+                          <Select.Option key={idx} value={option}>
+                            {option}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    ) : (
+                      <Input placeholder={ele.content} className={styles.input} />
+                    )}
+                  </Form.Item>
+                ))}
 
-            <Form
-              form={form}
+                <Form.Item
+                  label="Anything else you want to share"
+                  name="additionalInfo"
+                >
+                  <Input.TextArea
+                    rows={2}
+                    placeholder="Enter anything else you want to share"
+                    className={styles.input_last}
+                  />
+                </Form.Item>
 
-              onFinish={handleSubmit}
-              style={{ maxWidth: 600, margin: '0 auto' }}
-            >
-              <Form.Item label="Your city" name="city">
-                <Input placeholder="Enter your City" style={stylesInline.input} />
-              </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className={styles.button}
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Spin>
 
-              <Form.Item label="Your Address" name="address">
-                <Input placeholder="Your Address" style={stylesInline.input} />
-              </Form.Item>
-
-              <Form.Item label="Your state" name="state">
-                <Input placeholder="Enter your State Name" style={stylesInline.input} />
-              </Form.Item>
-
-              <Form.Item label="Your zip code" name="zip code">
-                <Input placeholder="Enter your zip code" style={stylesInline.input} />
-              </Form.Item>
-
-              <Form.Item label="Fav Football Player" name="favoriteFootballPlayer">
-                <Input placeholder="Enter your favorite football player" style={stylesInline.input} />
-              </Form.Item>
-
-              <Form.Item label="Anything else you want to share" name="additionalInfo">
-                <Input.TextArea
-                  rows={4}
-                  placeholder="Enter anything else you want to share"
-                  style={{ ...stylesInline.input, resize: 'none' }}
-                />
-              </Form.Item>
-
-              <Form.Item>
-                <Button type="primary" htmlType="submit" style={stylesInline.button}>
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
           </div>
         </div>
-      </div>
+      </div >
       <img className={styles.imgStyle} src={img}></img>
+
     </>
   );
 };

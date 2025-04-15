@@ -6,17 +6,8 @@ import useFetch from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Spin } from "antd";
+import { requestData } from "../../utils/Types";
 
-interface requestData {
-  requested_by: string,
-  requested_to: string,
-  time_slot: string,
-  id: number,
-  date: string,
-  status: string,
-  last_name: string,
-  first_name: string,
-}
 
 
 

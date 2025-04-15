@@ -28,6 +28,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   h2 {
     font-size: 26px !important;
     font-weight: lighter;
@@ -50,8 +51,8 @@
 
 .imgStyle {
   position: absolute;
-  height: 35vh;
-  width: 40vh;
+  height: 35%;
+  width: 20%;
   bottom: 20vh;
   left: 25vw;
   z-index: 1000 !important;
@@ -80,4 +81,55 @@
   p{
     font-size: 18px;
   }
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+}
+
+.heading{
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.input{
+  width: 100%;
+  height: 30px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.input_last{
+  width: 100%;
+  height: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  resize: none;
+}
+
+.button{
+  width: 30%;
+  height: 30px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #BB6EFF, #704299);
+  border: none;
+  font-size: 14px;
+  font-weight: light;
+  font-family: $font-stack-primary;
+}
+
+
+.footerText {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.span{
+  color: #BB6EFF;
+  cursor: pointer;
 }

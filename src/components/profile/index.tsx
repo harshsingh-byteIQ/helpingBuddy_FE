@@ -6,20 +6,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import useFetch from "../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
+import { userData } from "../../utils/Types";
 
-interface data_object {
-  first_name: string,
-  last_name: string,
-  email: string,
-  contact_no: string,
-  role: string,
-}
 
-interface userData {
-  message: string,
-  data: data_object,
-  status_code: number,
-}
 
 const Profile = () => {
 

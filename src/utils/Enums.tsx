@@ -9,5 +9,6 @@ export enum ButtonType {
   Student = "student",
   Patient = "patient",
   Admin = "admin",
-  Request = "request"
+  Request = "request",
+  Schedule = "schedule"
 }

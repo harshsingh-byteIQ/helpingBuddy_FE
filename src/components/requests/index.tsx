@@ -5,30 +5,20 @@ import { ButtonType, MeetingTypes } from "../../utils/Enums";
 import Tabs from "../tabs";
 import styles from "./requests.module.scss";
 import { Spin } from "antd";
-import axios from "axios";
+import { requestDataRequest } from "../../utils/Types";
 
-interface requestData {
-  requested_by: string,
-  requested_to: string,
-  time_slot: string,
-  id: number,
-  date: string,
-  status: string,
-  last_name: string,
-  first_name: string,
-  user_id:number
-}
+
 
 const ManageRequests = () => {
 
-  const { data, loading, error, refetch } = useFetch<[requestData]>(`/get-appointments`);
+  const { data, loading } = useFetch<[requestDataRequest]>(`/get-appointments`);
 
   const [filteredData, setFilteredData] = useState<any>();
 
   useEffect(() => {
     if (data) {
       console.log(data)
-      const newData = data?.filter((ele: requestData) => {
+      const newData = data?.filter((ele: requestDataRequest) => {
         return ele?.status === "initiated"
       })
       setFilteredData(newData);
@@ -48,7 +38,7 @@ const ManageRequests = () => {
         </div>
 
         <div className={styles.manageUser_users}>
-          {filteredData?.map((ele: requestData, idx: number) => {
+          {filteredData?.map((ele: requestDataRequest, idx: number) => {
 
             return (
               <div className="tabs">
@@ -58,6 +48,7 @@ const ManageRequests = () => {
                   name={`${ele?.first_name} ${ele?.last_name}`}
                   time={`${ele?.date?.split(".")[0]?.split("T")[0]} ${ele.time_slot}`}
                   id={ele?.id}
+                  setReload={() => {}}
                 ></Tabs>
               </div>
             );
