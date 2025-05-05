@@ -6,7 +6,7 @@ import { MessageOutlined, UserOutlined, RobotOutlined, PlayCircleOutlined } from
 import usePost from "../../hooks/usePost";
 import { ChatBotPayload, ChatBotResponse, musicResponse } from "../../utils/Types";
 import { toast } from 'react-toastify';
-import { MusicCols, QuestionAnswerCols } from "../../utils/string";
+import { QuestionAnswerCols } from "../../utils/string";
 
 const MUSIC_URL = `/ytMusic`;
 const QUESTION_URL = `question`;
@@ -30,6 +30,7 @@ const ChatbotTrigger = () => {
   const questionPost = usePost<any, ChatBotPayload>(QUESTION_URL);
 
   useEffect(() => {
+    console.log(dataSource)
     if (isModalVisible && messages.length === 0) {
       setMessages([
         {
