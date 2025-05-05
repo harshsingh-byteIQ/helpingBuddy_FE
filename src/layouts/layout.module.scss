@@ -36,6 +36,7 @@
 .content_wrapper_protected {
   scrollbar-width: none;
   overflow: auto;
+  min-height: calc(100vh - 64px);
 }
 
 .layoutWrapper {

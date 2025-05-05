@@ -1,3 +1,4 @@
+// Profile.tsx
 import { useEffect, useState } from "react";
 import styles from "./profile.module.scss";
 import profileImage from "../../assets/profile_image.png";
@@ -6,23 +7,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import useFetch from "../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
-
-interface data_object {
-  first_name: string,
-  last_name: string,
-  email: string,
-  contact_no: string,
-  role: string,
-}
-
-interface userData {
-  message: string,
-  data: data_object,
-  status_code: number,
-}
+import { userData } from "../../utils/Types";
 
 const Profile = () => {
-
   const id = useSelector((state: RootState) => state?.auth.id)
   const location = useLocation();
   const user_id = location?.state?.id;
@@ -64,140 +51,45 @@ const Profile = () => {
     }
   }, [data]);
 
-
   return (
     <Spin spinning={loading}>
-      <div className={`${styles.t} container_margin`}>
-        <div className={styles.profile_page_wrapper}>
-          <div className={styles.img_wrapper}>
-            <img src={profileImage} alt="Profile" />
-            <div className={styles.detail_container}>
-              <p>{formData.firstName} {formData.lastName}</p>
-              <p>{formData.role}</p>
-              <p className={styles.smallCap}>Hey it's {formData.firstName}</p>
+      <div className={styles.container}>
+        <div className={styles.leftPanel}>
+          <img src={profileImage} alt="Profile" className={styles.profileImage} />
+          <div className={styles.details}>
+            <h2>{formData.firstName} {formData.lastName}</h2>
+            <p className={styles.role}>{formData.role}</p>
+            <p className={styles.caption}>Hey, it's {formData.firstName}</p>
+            <div className={styles.buttonGroup}>
+              {isEditing ? (
+                <>
+                  <Button onClick={handleCancel}>Cancel</Button>
+                  <Button type="primary" onClick={handleSubmit}>Submit</Button>
+                </>
+              ) : (
+                <Button onClick={handleEdit}>Edit Profile</Button>
+              )}
             </div>
           </div>
-
-          <div className={styles.edit_button_wrapper}>
-            {isEditing ? (
-              <>
-                <Button onClick={handleCancel} style={{ marginRight: "10px" }}>
-                  Cancel
-                </Button>
-                <Button type="primary" onClick={handleSubmit}>
-                  Submit
-                </Button>
-              </>
-            ) : (
-              <Button onClick={handleEdit}>Edit Profile</Button>
-            )}
-          </div>
         </div>
 
-        <div className={styles.hrWrapper}>
-          <hr />
-        </div>
-
-        <div className={styles.authContent}>
-          <Form layout="vertical">
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="First Name">
-                  <Input
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Last Name">
-                  <Input
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
+        <div className={styles.rightPanel}>
+          <Form layout="vertical" style={{ width: '100%'}}>
+            <Row gutter={20}>
+              <Col span={12}><Form.Item label="First Name"><Input value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
+              <Col span={12}><Form.Item label="Last Name"><Input value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
             </Row>
-
             <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="Email">
-                  <Input
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Phone Number">
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
+              <Col span={12}><Form.Item label="Email"><Input value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
+              <Col span={12}><Form.Item label="Phone Number"><Input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
             </Row>
-
             <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="Address">
-                  <Input
-                    value={formData.address}
-                    onChange={(e) =>
-                      setFormData({ ...formData, address: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="City">
-                  <Input
-                    value={formData.city}
-                    onChange={(e) =>
-                      setFormData({ ...formData, city: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
+              <Col span={12}><Form.Item label="Address"><Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
+              <Col span={12}><Form.Item label="City"><Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
             </Row>
-
             <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="State">
-                  <Input
-                    value={formData.state}
-                    onChange={(e) =>
-                      setFormData({ ...formData, state: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Zip Code">
-                  <Input
-                    value={formData.zip}
-                    onChange={(e) =>
-                      setFormData({ ...formData, zip: e.target.value })
-                    }
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
+              <Col span={12}><Form.Item label="State"><Input value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
+              <Col span={12}><Form.Item label="Zip Code"><Input value={formData.zip} onChange={(e) => setFormData({ ...formData, zip: e.target.value })} disabled={!isEditing} /></Form.Item></Col>
             </Row>
           </Form>
         </div>

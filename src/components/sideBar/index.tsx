@@ -125,6 +125,19 @@ const PatientsSideBarOption: menuListType[] = [
     className: `${styles.menuItem}`,
   },
   {
+    title: "Explore Students",
+    lable: "Explore",
+    Icon: (
+      <Icon
+        className={styles.icon}
+        icon="ph:certificate"
+        width="24"
+        height="24"
+      />
+    ),
+    className: `${styles.menuItem}`,
+  },
+  {
     title: "About us",
     lable: "About",
     Icon: (

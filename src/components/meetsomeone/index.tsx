@@ -7,15 +7,7 @@ import { RootState } from "../../redux/store";
 import { useState } from "react";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { toast } from "react-toastify";
-
-interface LoginPayload {
-    requested_by: string,
-    time_slot: string,
-}
-
-interface LoginResponse {
-
-}
+import { UpdateAppointmentPayload, UpdateAppointmentResponse } from "../../utils/Types";
 
 const questions = [
     "What was your favorite thing to do when you were a child?",
@@ -29,7 +21,6 @@ const questions = [
     "What advice would you give to someone young like a student?",
     "What makes you happy or brings you peace these days?"
 ];
-
 
 const styles_inline: Record<string, React.CSSProperties> = {
     container: {
@@ -108,11 +99,11 @@ const MeetSomeone = () => {
         setAnswers(newAnswers);
     };
 
-    const { loading, error, postData } = usePost<LoginResponse, LoginPayload>('/create-appointments');
+    const { loading, error, postData } = usePost<UpdateAppointmentResponse , UpdateAppointmentPayload>('/create-appointments-by-request');
 
     const handleSubmit = async () => {
         try {
-            const res = await postData({ requested_by: `${id}` || "", time_slot: "9AM" })
+            const res = await postData({ requested_by: `${id}` || "", time_slot: "" })
             console.log(res)
             toast.success("Your appointment had be submitted please wait till the admin approves it");
             goTo("/profile")

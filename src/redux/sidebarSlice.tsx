@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface initialStateData {
-    name : string,
-    isReload : boolean,
-}
+import { initialStateData } from "../utils/Types";
 
 const initialState: initialStateData = {
     name : "Profile",
@@ -14,7 +10,7 @@ const sideBarSlice = createSlice({
     name: "sidebar",
     initialState,
     reducers: {
-        manageChange: (state, action: PayloadAction<initialStateData>) => {
+        manageChange: (state , action: PayloadAction<initialStateData>) => {
             return action.payload;
         }
     }

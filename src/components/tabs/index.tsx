@@ -7,6 +7,7 @@ import { Modal } from "antd";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { baseURL } from "../../utils/axios";
 
 const Tabs = (Props: TabsPropsType) => {
   const { goTo } = useAppNavigation();
@@ -15,7 +16,7 @@ const Tabs = (Props: TabsPropsType) => {
 
   const handleDelete = async (id: any) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8001/delete-appointment/${id}`);
+      const response = await axios.delete(`${baseURL}delete-appointment/${id}`);
 
       if (response.status === 200) {
         toast.success("Appointment deleted successfully!");
@@ -30,7 +31,7 @@ const Tabs = (Props: TabsPropsType) => {
 
   const handleAllocateStudent = async (id: any) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8001/update-appointments`, {
+      const response = await axios.put(`${baseURL}update-appointments`, {
         id: id,
         requested_to: "14",
       });
@@ -49,7 +50,7 @@ const Tabs = (Props: TabsPropsType) => {
 
   const handleDeleteUser = async (id: any) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8001/delete-user/${id}`);
+      const response = await axios.delete(`${baseURL}delete-user/${id}`);
 
       if (response.status === 200) {
         toast.success("user deleted successfully!");
@@ -119,8 +120,6 @@ const Tabs = (Props: TabsPropsType) => {
         return styles?.btn_style_student;
     }
   };
-
-
 
   const manageOnClick = () => {
     goTo("/profile", { "id": Props?.id });

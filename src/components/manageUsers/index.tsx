@@ -5,27 +5,18 @@ import Tabs from "../tabs";
 import styles from "./manageUser.module.scss";
 import useFetch from "../../hooks/useFetch";
 import { Spin } from "antd";
+import { userDataManageuser } from "../../utils/Types";
 
-
-interface userData {
-  first_name: string,
-  id: number,
-  contact_no: string,
-  created_at: string,
-  last_name: string,
-  email: string,
-  role: string,
-}
 
 const ManageUsers = () => {
 
   const [activeTab, setActiveTab] = useState(0);
   const [filteredData, setFilteredData] = useState<any>();
-  const { data, loading, refetch } = useFetch<[userData]>(`/all-user`, true);
+  const { data, loading, refetch } = useFetch<[userDataManageuser]>(`/all-user`, true);
 
 
   useEffect(() => {
-    const newData = data?.filter((ele: userData) => {
+    const newData = data?.filter((ele: userDataManageuser) => {
       return ele?.role === (activeTab === 0 ? "patient" : "student")
     })
     setFilteredData(newData);
@@ -56,7 +47,7 @@ const ManageUsers = () => {
           ></CustomTabs>
         </div>
         <div className={styles.manageUser_users}>
-          {filteredData?.map((ele: userData, idx: number) => {
+          {filteredData?.map((ele: userDataManageuser, idx: number) => {
             return (
               <div className="tabs">
                 <Tabs

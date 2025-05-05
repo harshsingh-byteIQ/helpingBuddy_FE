@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
 import Profile from "../components/profile";
 import Login from "../components/auth/login";
 import Register from "../components/auth/register";
-import RoleSelect from "../components/auth/roleSelect";
 import Question from "../components/auth/collectInfo";
 import Contact from "../components/contact";
 import Appointments from "../components/appointments";
@@ -14,11 +12,8 @@ import Room from "../components/videoCall/rome";
 import ManageRequests from "../components/requests";
 import MeetSomeone from "../components/meetsomeone";
 import RequestDetails from "../components/requestDetails";
-
-interface RouterBase {
-  path: string;
-  element: ReactNode;
-}
+import { RouterBase } from "../utils/Types";
+import ScheduleYourself from "../components/scheduleYourself";
 
 export const proctectedRoutes: RouterBase[] = [
   {
@@ -76,6 +71,10 @@ export const proctectedRoutes: RouterBase[] = [
   {
     path: "request-details",
     element: <RequestDetails></RequestDetails>
+  },
+  {
+    path: "Explore",
+    element: <ScheduleYourself></ScheduleYourself>
   }
 ];
 

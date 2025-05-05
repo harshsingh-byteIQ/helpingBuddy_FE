@@ -6,25 +6,10 @@ import { useAppNavigation } from "../../hooks/useAppNavigation";
 import usePost from "../../hooks/usePost";
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import { RegisterPayload, RegisterResponse, SendEmailPayload, SendEmailResponse } from "../../utils/Types";
+import { useDispatch } from "react-redux";
+import { setRole } from "../../redux/authSlice";
 
-interface RegisterPayload {
-  first_name: string,
-  last_name: string,
-  email: string,
-  contact_no: string,
-  password: string,
-  role: string,
-  selected_slots: JSON
-}
-
-interface RegisterResponse {
-  token: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
-}
 
 const stylesInline = {
   container: {
@@ -102,27 +87,34 @@ const daysOfWeek = [
 const RoleSelect = ({ data }: any) => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const { goTo } = useAppNavigation();
+  const dispatch = useDispatch()
   const { Option } = Select;
 
   const [form] = Form.useForm();
 
   const handleTabClick = (option: number) => {
     setSelectedOption(option);
-    console.log(data);
   };
 
-  const { loading, error, postData } = usePost<RegisterPayload, RegisterResponse>('/register');
+  const { loading, error, postData } = usePost<RegisterResponse, RegisterPayload>('/register');
+  const { postData: sendEmailData } = usePost<SendEmailResponse, SendEmailPayload>('/welcome-user-email');
   const [slotCount, setSlotCount] = useState<number | null>(null);
-
-
 
   const handleRoleSubmit = async () => {
     const role = selectedOption === 0 ? "student" : selectedOption === 1 ? "patient" : "caretaker";
     try {
       const result = await postData({ ...data, role });
-      console.log(result)
-      toast.success("Registration successful!");
-      goTo("/questions")
+      if (result?.status_code === 200) {
+        toast.success("Registration successful!");
+        const emailData: SendEmailPayload = {
+          "username": data.first_name,
+          "email": data.email,
+          "password": data.password
+        }
+        sendEmailData(emailData)
+        dispatch(setRole(result.data))
+        goTo("/questions")
+      }
     } catch (err: any) {
       console.log(error)
       toast.error("something went wrong , please try again ");
@@ -143,9 +135,11 @@ const RoleSelect = ({ data }: any) => {
 
     try {
       const result = await postData({ ...data, role, selected_slots: slots });
-      console.log(result)
-      toast.success("Registration successful!");
-      goTo("/questions")
+      if (result?.status_code === 200) {
+        toast.success("Registration successful!");
+        dispatch(setRole(result.data))
+        goTo("/questions")
+      }
     } catch (err: any) {
       console.log(error)
       toast.error("something went wrong , please try again ");
@@ -243,11 +237,12 @@ const RoleSelect = ({ data }: any) => {
                               rules={[{ required: true, message: 'Select a time' }]}
                             >
                               <TimePicker
-                                format="HH:00"
-                                minuteStep={60}
+                                use12Hours
+                                format="hh:mm A"
                                 style={{ width: '100%' }}
                                 placeholder="Select time"
                               />
+
                             </Form.Item>
                           </Col>
                         </Row>

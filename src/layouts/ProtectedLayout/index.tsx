@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { toast } from "react-toastify";
+import ChatbotTrigger from "../../components/floatingBtn";
 
 const { Content, Header, Sider } = Layout;
 
@@ -59,6 +60,7 @@ const ProtectedLayout = () => {
           <div className={styles.template}>{outlet}</div>
         </Content>
       </Layout>
+      <ChatbotTrigger />
     </Layout>
   );
 };

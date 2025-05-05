@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setRole } from "../../redux/authSlice";
 import usePost from "../../hooks/usePost";
 import { toast } from "react-toastify";
+import { LoginPayload, LoginResponse } from "../../utils/Types";
 
 const stylesInline = {
   container: {
@@ -47,21 +48,6 @@ const stylesInline = {
   },
 };
 
-interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  message: string;
-  data: {
-    access_token: string
-    role : string
-    id : number
-  };
-  status_code: number
-}
-
 const Register = () => {
   const { goTo } = useAppNavigation();
   const dispatch = useDispatch();
@@ -85,8 +71,7 @@ const Register = () => {
     } catch (err) {
       console.error(error)
       toast.warning("wrong email or password")
-    } finally {
-    }
+    } 
   };
 
   const handleSpanClick = () => {

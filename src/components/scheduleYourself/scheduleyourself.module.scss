@@ -1,0 +1,137 @@
+@use "../../styles/variable" as *;
+
+
+.tabs {
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    border-radius: 1vh;
+    padding: 1vh;
+    margin-top: 2vh;
+    display: flex;
+}
+
+.tabs_wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    .first_div {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .second_div {
+        display: flex;
+        justify-content: space-around;
+        flex: 8;
+        flex-direction: column;
+        align-items: start;
+        margin-left: 3vw !important;
+
+        h4 {
+            font-weight: 600;
+            font-family: $font-stack-primary;
+            font-size: 16px;
+        }
+    }
+
+    .third_div {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1vw;
+
+        .cancleBtn {
+            padding: 6px;
+            border: none;
+            border-radius: 1vh;
+            background-color: #d92e2e;
+            color: white;
+            width: 8vw;
+        }
+
+        .cancleBtn:hover {
+            cursor: pointer;
+        }
+
+        .viewProfileBtn {
+            padding: 6px;
+            border: none;
+            border-radius: 1vh;
+            background-color: #4343FF;
+            color: white;
+            width: 8vw;
+        }
+
+        .viewProfileBtn:hover {
+            cursor: pointer;
+        }
+    }
+
+    .btn_style_postponded {
+        background-color: #d6f3f3;
+        color: #02a3f7;
+        padding: 15px;
+        border-radius: 5vh;
+    }
+
+    .btn_style_scheduled {
+        background-color: #c9f6cd;
+        color: #0baa1b;
+        padding: 15px;
+        border-radius: 5vh;
+    }
+
+    .btn_style_cancelled {
+        background-color: #ffd6d6;
+        color: #ff3232;
+        padding: 5px;
+        border-radius: 5vh;
+    }
+
+    .btn_style_none {
+        display: none;
+    }
+}
+
+.tabs_wrapper:hover {
+    cursor: pointer;
+}
+
+
+.modalTop {
+    padding: 20px;
+}
+
+.modal_internal_styles {
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background-color: #fafafa;
+    box-shadow: 0px 1px 3px rgpa(0, 0, 0, 0.5);
+}
+
+.h4styles {
+    margin-bottom: 8px;
+    color: #00338d;
+    font-weight: 600;
+}
+
+.pstyles {
+    margin: 0;
+    font-size: 16px;
+
+    strong {
+        color: #333
+    }
+
+    span {
+        color: #555
+    }
+}
