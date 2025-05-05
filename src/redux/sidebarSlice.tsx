@@ -11,6 +11,7 @@ const sideBarSlice = createSlice({
     initialState,
     reducers: {
         manageChange: (state , action: PayloadAction<initialStateData>) => {
+            console.log(state)
             return action.payload;
         }
     }

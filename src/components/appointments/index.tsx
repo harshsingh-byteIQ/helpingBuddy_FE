@@ -41,6 +41,7 @@ const Appointments = () => {
   }
 
   useEffect(() => {
+    console.log(roomCodeError,passwordError,setJoinRoomLoading)
     if (data) {
       const newData = data?.filter((ele: requestData) => {
         return ele?.time_slot !== "" && `${id}` === (role === "patient" ? ele?.requested_by : ele?.requested_to)
@@ -98,6 +99,7 @@ const Appointments = () => {
     // const now = new Date();
     // console.log(start, ",", end, now)
     // return now >= start && now <= end;
+    console.log(timeslot)
     return true
   }
 

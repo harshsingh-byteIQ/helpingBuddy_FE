@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import usePost from "../../hooks/usePost";
 import { toast } from "react-toastify";
-import { AnswerSubmitPayload, AnswerSubmitResponse, AnswerType, getQuestionResponse } from "../../utils/Types";
+import { AnswerSubmitPayload, AnswerSubmitResponse,getQuestionResponse } from "../../utils/Types";
 import useFetch from "../../hooks/useFetch";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { Button, Form, Input, Select, Spin } from "antd";
@@ -24,15 +24,12 @@ const Question = () => {
   const id = useSelector((state: RootState) => state.auth.id)
 
   const handleSubmit = async (data: any) => {
-
-
-    // Step 1: Filter out entries where key or value is null
     const newData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => key !== "additionalInfo" && value !== null)
     );
 
     // Step 2: Map filtered object to AnswerType[]
-    const mapped: AnswerType[] = Object.entries(newData).map(([key, value]) => ({
+    const mapped:any = Object.entries(newData).map(([key, value]) => ({
       question_id: Number(key),
       user_id: id !== null ? Number(id) : 0,
       answer: value
@@ -49,7 +46,7 @@ const Question = () => {
         toast.warning("please check email or password")
       }
     } catch (err) {
-      console.error(error)
+      console.error(submitError , error)
       toast.warning("wrong email or password")
     }
   }
@@ -64,7 +61,7 @@ const Question = () => {
     
     setFilteredData(newData);
     
-  }, [data, role]); // 👈 role should be in dependency array too!
+  }, [data, role]); 
   
 
   return (
@@ -82,7 +79,7 @@ const Question = () => {
         <div className={styles.authContent}>
           <h1 className={styles.heading}>Help us get to know you better</h1>
           <div style={{ width: "70%", height: "60vh", overflowY: "scroll" }}>
-            <Spin spinning={loading}>
+            <Spin spinning={loading || answerSubmitLoading}>
               <Form
                 form={form}
                 onFinish={handleSubmit}

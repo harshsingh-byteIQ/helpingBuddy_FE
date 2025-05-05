@@ -29,10 +29,7 @@ const Room = () => {
     const [videoStream, setVideoStream] = useState<any>(null);
     const [videoStreamHasVideo, setVideoStreamHasVideo] = useState<any>(false);
     const [videoStreamHasAudio, setVideoStreamHasAudio] = useState<any>(false);
-    const [isRecording, setIsRecording] = useState<any>(false);
-    const [recordedChunks, setRecordedChunks] = useState<any>([]);
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
-    const mediaRecorderRef = useRef<any>(null);
     const [isScreenSharing, setIsScreenSharing] = useState(false);
 
     // Peer Video Stream
@@ -60,6 +57,7 @@ const Room = () => {
     );
 
     useEffect(() => {
+        console.log(screenStream ,)
         const verifyRoom = async (password: any) => {
             try {
                 const response = await fetch(

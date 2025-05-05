@@ -47,7 +47,7 @@ const ManageUsers = () => {
           ></CustomTabs>
         </div>
         <div className={styles.manageUser_users}>
-          {filteredData?.map((ele: userDataManageuser, idx: number) => {
+          {filteredData?.map((ele: userDataManageuser) => {
             return (
               <div className="tabs">
                 <Tabs
