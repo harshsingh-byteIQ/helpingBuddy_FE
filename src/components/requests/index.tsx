@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { baseURL } from "../../utils/axios";
 import usePost from "../../hooks/usePost";
 
@@ -24,8 +23,6 @@ const ManageRequests = () => {
   const handleSelection = (id: any) => {
     setSelectedCandidateId(id);
   };
-
-  const { goTo } = useAppNavigation();
 
   const { data, loading } = useFetch<[requestDataRequest]>(`/get-appointment-requests/${id}`);
 
@@ -53,6 +50,7 @@ const ManageRequests = () => {
   }, [data]);
 
   const handleDelete = async (id: any) => {
+    console.log(appointmentSubmitLoading)
     try {
       const response = await axios.delete(`${baseURL}delete-appointment/${id}`);
 
@@ -124,7 +122,7 @@ const ManageRequests = () => {
           }</p>
         </div>
         <div className={styles.manageUser_users}>
-          {filteredData?.map((ele: requestDataRequest, idx: number) => {
+          {filteredData?.map((ele: requestDataRequest) => {
             return (
               <div className="tabs">
                 <div className={styles.tabs_wrapper}>

@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const MeetingLink = ({ roomCode } : any) => {
     
-    const link = `${window.location.origin}/room/${roomCode}?password=${btoa(localStorage.getItem("password"))}`;
+    const link = `${window.location.origin}/room/${roomCode}`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(link);

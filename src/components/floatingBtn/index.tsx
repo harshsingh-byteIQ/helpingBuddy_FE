@@ -1,12 +1,11 @@
 // ChatbotTrigger.tsx
 import styles from "./floatingbtn.module.scss"
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Button, FloatButton, Input, Modal, Table } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import usePost from "../../hooks/usePost";
-import { ChatBotPayload, ChatBotResponse, musicResponse, questionResponse } from "../../utils/Types";
+import { ChatBotPayload, ChatBotResponse, musicResponse } from "../../utils/Types";
 import { toast } from 'react-toastify';
-import { Link } from "react-router-dom";
 import { MusicCols, QuestionAnswerCols } from "../../utils/string";
 
 const MUSIC_URL = `/ytMusic`
