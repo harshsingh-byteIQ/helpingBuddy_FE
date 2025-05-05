@@ -1,22 +1,27 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import VideoPreview from "../VideoCallHealper/components/VideoPreview";
 import VideoControl from "../VideoCallHealper/components/VideoControl";
 import FullPageLoader from "../VideoCallHealper/components/FullPageLoader";
 import NoUserScreen from "../VideoCallHealper/components/NoUserScreen";
-import MeetingLink from "../VideoCallHealper/components/MeetingLink";
 import FullPageError from "../VideoCallHealper/components/FullPageError";
-import img from "../../assets/Screenshot (191).png";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { Modal } from "antd";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 let socket: any = null;
 
 const Room = () => {
-    const navigate = useNavigate();
+
+    const { goTo } = useAppNavigation();
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const divRef = useRef(null);
+    const location = useLocation();
+    const appointment_id = location?.state?.id;
 
     const { roomCode } = useParams();
 
@@ -26,14 +31,17 @@ const Room = () => {
     const [videoStreamHasAudio, setVideoStreamHasAudio] = useState<any>(false);
     const [isRecording, setIsRecording] = useState<any>(false);
     const [recordedChunks, setRecordedChunks] = useState<any>([]);
-    const mediaRecorderRef = useRef(null);
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+    const mediaRecorderRef = useRef<any>(null);
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
 
     // Peer Video Stream
     const [peerVideoStream, setPeerVideoStream] = useState(null);
     const [peerVideoStreamHasVideo, setPeerVideoStreamHasVideo] = useState(false);
     const [peerVideoStreamHasAudio, setPeerVideoStreamHasAudio] = useState(false);
+    const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
+    const screenTrackRef = useRef<MediaStreamTrack | null>(null);
 
-    // WebRTC Peer Connection
     const peerConnection = useRef(
         new RTCPeerConnection({
             iceServers: [
@@ -55,7 +63,7 @@ const Room = () => {
         const verifyRoom = async (password: any) => {
             try {
                 const response = await fetch(
-                    `http://localhost:8000/room/verify`,
+                    `https://video-call-be-6eie.onrender.com/room/verify`,
                     {
                         method: "POST",
                         headers: {
@@ -104,7 +112,7 @@ const Room = () => {
                             peerConnection.current.addTrack(track, stream);
                         });
 
-                        socket = io("http://localhost:8000", {
+                        socket = io("https://video-call-be-6eie.onrender.com/", {
                             transports: ["websocket"],
                         });
 
@@ -160,31 +168,6 @@ const Room = () => {
         return localStorage.getItem("password") ?? null;
     };
 
-    const startRecording = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: { mediaSource: "screen" },
-                audio: true,
-            });
-
-            const mediaRecorder = new MediaRecorder(stream, {
-                mimeType: "video/webm",
-            });
-
-            mediaRecorder.ondataavailable = (event: any) => {
-                if (event.data.size > 0) {
-                    setRecordedChunks((prev : any) => [...prev, event.data]);
-                }
-            };
-
-            mediaRecorder.start();
-            mediaRecorderRef.current = mediaRecorder;
-            setIsRecording(true);
-        } catch (error) {
-            console.error("Error starting recording:", error);
-        }
-    };
-
     const bindEvents = () => {
         socket.on("user-connected", () => {
             peerConnection.current.createOffer().then((offer) => {
@@ -207,17 +190,17 @@ const Room = () => {
                 });
         });
 
-        socket.on("answer", (answer:any) => {
+        socket.on("answer", (answer: any) => {
             peerConnection.current.setRemoteDescription(
                 new RTCSessionDescription(answer)
             );
         });
 
-        socket.on("candidate", (candidate:any) => {
+        socket.on("candidate", (candidate: any) => {
             peerConnection.current?.addIceCandidate(new RTCIceCandidate(candidate));
         });
 
-        socket.on("stateChange", ({ hasVideo, hasAudio } : any) => {
+        socket.on("stateChange", ({ hasVideo, hasAudio }: any) => {
             setPeerVideoStreamHasVideo(hasVideo);
             setPeerVideoStreamHasAudio(hasAudio);
         });
@@ -226,7 +209,7 @@ const Room = () => {
             if (event.candidate) socket.emit("candidate", event.candidate);
         };
 
-        peerConnection.current.ontrack = (event : any) => {
+        peerConnection.current.ontrack = (event: any) => {
             setPeerVideoStream(event.streams[0]);
 
             setPeerVideoStreamHasVideo(event.streams[0].getVideoTracks().length > 0);
@@ -259,7 +242,20 @@ const Room = () => {
         }
     };
 
-    // Video and Audio Toggle Handlers
+    const handleDelete = async (id: number) => {
+        try {
+            const response = await axios.delete(`http://127.0.0.1:8002/delete-appointment/${id}`);
+            if (response.status === 200) {
+                toast.success("Appointment closed successfully!");
+            } else {
+                toast.warning("Something went wrong while deleting.");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to close the Appointment.");
+        }
+    }
+
     const handleVideoToggle = () => {
         peerConnection.current.getSenders().forEach((sender) => {
             if (sender?.track?.kind === "video") {
@@ -290,44 +286,133 @@ const Room = () => {
         setVideoStreamHasAudio(!videoStreamHasAudio);
     };
 
-    // End Call Handler
     const handleEndCall = () => {
-        unbindEvents();
-        peerConnection.current.close();
-        if (videoStream) {
-            videoStream.getTracks().forEach((track : any) => track.stop());
+        try {
+            unbindEvents();
+            peerConnection.current.close();
+            if (videoStream) {
+                videoStream.getTracks().forEach((track: any) => track.stop());
+            }
+            localStorage.removeItem("password");
+            socket.disconnect();
+            goTo("/appointments")
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setModalOpen(false)
         }
-        localStorage.removeItem("password");
-        socket.disconnect();
-        navigate("/video");
     };
 
-    const stopRecording = () => {
-        if (mediaRecorderRef.current) {
-            mediaRecorderRef.current.stop();
-            setIsRecording(false);
+    const startScreenShare = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: false, // You can set true if you want to capture audio too
+            });
+
+            const screenTrack = stream.getVideoTracks()[0];
+            screenTrackRef.current = screenTrack;
+            setScreenStream(stream);
+
+            const videoSender = peerConnection.current.getSenders().find(
+                (sender) => sender.track?.kind === "video"
+            );
+
+            if (videoSender) {
+                videoSender.replaceTrack(screenTrack);
+            }
+
+            screenTrack.onended = () => {
+                stopScreenShare();
+            };
+
+            toast.info("You are now screen sharing.");
+        } catch (err) {
+            console.error("Error sharing screen:", err);
         }
     };
 
-    const downloadRecording = () => {
-        if (recordedChunks.length === 0) return;
-        const blob = new Blob(recordedChunks, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "recording.webm";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+    const stopScreenShare = () => {
+        const originalVideoTrack = videoStream?.getVideoTracks()[0];
+
+        const videoSender = peerConnection.current.getSenders().find(
+            (sender) => sender.track?.kind === "video"
+        );
+
+        if (videoSender && originalVideoTrack) {
+            videoSender.replaceTrack(originalVideoTrack);
+        }
+
+        if (screenTrackRef.current) {
+            screenTrackRef.current.stop();
+            screenTrackRef.current = null;
+        }
+
+        setScreenStream(null);
+        toast.info("Screen sharing stopped.");
+    };
+
+    const handleScreenShare = async () => {
+        if (isScreenSharing) {
+            stopScreenShare();
+        } else {
+            await startScreenShare();
+        }
+        setIsScreenSharing(!isScreenSharing);
     };
 
     if (isLoading) return <FullPageLoader />;
 
     if (error) return <FullPageError error={error} />;
 
+
+    // const stopRecording = () => {
+    //     if (mediaRecorderRef.current) {
+    //         mediaRecorderRef.current?.stop();
+    //         setIsRecording(false);
+    //     }
+    // };
+
+    // const downloadRecording = () => {
+    //     if (recordedChunks.length === 0) return;
+    //     const blob = new Blob(recordedChunks, { type: "video/webm" });
+    //     const url = URL.createObjectURL(blob);
+    //     const a = document.createElement("a");
+    //     a.href = url;
+    //     a.download = "recording.webm";
+    //     document.body.appendChild(a);
+    //     a.click();
+    //     window.URL.revokeObjectURL(url);
+    // };
+
+    // const startRecording = async () => {
+    //     try {
+    //         const stream = await navigator.mediaDevices.getDisplayMedia({
+    //             video: { mediaSource: "screen" },
+    //             audio: true,
+    //         });
+
+    //         const mediaRecorder = new MediaRecorder(stream, {
+    //             mimeType: "video/webm",
+    //         });
+
+    //         mediaRecorder.ondataavailable = (event: any) => {
+    //             if (event.data.size > 0) {
+    //                 setRecordedChunks((prev: any) => [...prev, event.data]);
+    //             }
+    //         };
+
+    //         mediaRecorder.start();
+    //         mediaRecorderRef.current = mediaRecorder;
+    //         setIsRecording(true);
+    //     } catch (error) {
+    //         console.error("Error starting recording:", error);
+    //     }
+    // };
+
     return (
-        <div ref={divRef} className="h-screen h-dvh relative">
-            <div className="absolute top-4 right-4 z-50 bg-black p-2 rounded-full shadow-lg cursor-pointer">
+        <div ref={divRef} className="h-[92vh] relative">
+            {/* <div className="absolute top-4 right-4 z-50 bg-black p-2 rounded-full shadow-lg cursor-pointer">
                 <img
                     style={{ borderRadius: "10vh", height: "10vh", width: "15vw" }}
                     src={img}
@@ -357,7 +442,7 @@ const Room = () => {
                         Download Recording
                     </button>
                 )}
-            </div>
+            </div> */}
 
             <div className="h-full w-full">
                 {!peerVideoStream && <NoUserScreen />}
@@ -380,15 +465,36 @@ const Room = () => {
             </div>
 
             <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2 z-50 space-y-3">
-                <MeetingLink roomCode={roomCode} />
                 <VideoControl
                     isVideoOn={videoStreamHasVideo}
                     isMicOn={videoStreamHasAudio}
                     onToggleVideo={handleVideoToggle}
                     onToggleMute={handleMuteToggle}
-                    onEndCall={handleEndCall}
+                    onScreenShare={handleScreenShare}
+                    isScreenSharing={isScreenSharing}
+                    onEndCall={() => {
+                        setModalOpen(true);
+                        console.log(appointment_id);
+                    }}
                 />
+
             </div>
+            <Modal
+                open={isModalOpen}
+                onClose={() => {
+                    setModalOpen(false)
+                }}
+                onCancel={() => {
+                    setModalOpen(false)
+                }}
+                onOk={() => {
+                    handleDelete(appointment_id)
+                    handleEndCall()
+                }
+                }
+            >
+                You are ending the meeting , which once done can't be reversed . Please click yes to proceed .
+            </Modal>
         </div>
     );
 };

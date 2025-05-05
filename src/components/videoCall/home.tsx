@@ -23,7 +23,7 @@ const Home = () => {
             setPasswordError("");
             setCreateRoomLoading(true);
 
-            const response = await fetch(`http://localhost:8000/room/create`, {
+            const response = await fetch(`https://video-call-be-6eie.onrender.com/room/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +36,6 @@ const Home = () => {
                 if (data.errors) {
                     Object.keys(data.errors).forEach((error) => {
                         if (error === "roomCode") setRoomCodeError(data.errors[error]);
-
                         if (error === "password") setPasswordError(data.errors[error]);
                     });
 
@@ -62,7 +61,7 @@ const Home = () => {
             setPasswordError("");
             setJoinRoomLoading(true);
 
-            const response = await fetch(`http://localhost:8000/room/verify`, {
+            const response = await fetch(`https://video-call-be-6eie.onrender.com/room/verify`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -75,7 +74,6 @@ const Home = () => {
                 if (data.errors) {
                     Object.keys(data.errors).forEach((error) => {
                         if (error === "roomCode") setRoomCodeError(data.errors[error]);
-
                         if (error === "password") setPasswordError(data.errors[error]);
                     });
 
@@ -87,7 +85,6 @@ const Home = () => {
             }
 
             localStorage.setItem("password", password);
-
             navigate(`/room/${roomCode}`);
         } catch (error: any) {
             setPasswordError(error.message);
@@ -97,42 +94,59 @@ const Home = () => {
     };
 
     return (
-        <div className="h-screen h-dvh flex items-center justify-center px-2">
-            <div className="flex flex-col items-center justify-center gap-8 text-white bg-gray-900 p-8 md:p-12 rounded-2xl shadow-lg min-w-md">
-                <div className="flex items-center gap-4 text-4xl md:text-5xl">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+            <div className="w-full max-w-md p-6 md:p-8 rounded-xl bg-gray-900 shadow-lg text-white space-y-6">
+                <div className="flex items-center gap-4 justify-center text-4xl font-bold">
                     <FontAwesomeIcon icon={faComments} />
-                    <h1 className="font-bold select-none">Video Chat</h1>
+                    <h1 className="select-none">Video Chat</h1>
                 </div>
 
-                <div className="flex flex-col gap-4 w-full">
-                    <div className="flex flex-col gap-4 w-full">
-                        <div className="space-y-1 w-full">
-                            <input type="text" placeholder="Room Code" value={roomCode} onChange={(e) => setRoomCode(e.target.value)} className="px-4 py-2 rounded-md bg-gray-800 w-full" />
-                            {roomCodeError && <p className="text-red-500 text-sm">{roomCodeError}</p>}
-                        </div>
-
-                        <div className="space-y-1 w-full">
-                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="px-4 py-2 rounded-md bg-gray-800 w-full" />
-                            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-                        </div>
+                <div className="space-y-4">
+                    <div>
+                        <input
+                            type="text"
+                            placeholder="Room Code"
+                            value={roomCode}
+                            onChange={(e) => setRoomCode(e.target.value)}
+                            className="w-full px-4 py-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {roomCodeError && <p className="text-sm text-red-500 mt-1">{roomCodeError}</p>}
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-center  w-full">
-                        <button type="button" onClick={handleCreateRoom} className={`whitespace-nowrap px-4 py-2 bg-blue-600 rounded-lg shadow-md w-full flex items-center justify-center gap-2 ${loading ? "opacity-75 bg-opacity-50 cursor-not-allowed" : ""}`} disabled={loading}>
-                            <Spin spinning={createRoomLoading}>
-                                <span>Create Room</span>
-                            </Spin>
-                        </button>
-
-                        <button type="button" onClick={handleJoinRoom} className={`whitespace-nowrap px-4 py-2 bg-green-600 rounded-lg shadow-md w-full flex items-center justify-center gap-2 ${loading ? "opacity-75 bg-opacity-50 cursor-not-allowed" : ""}`} disabled={loading}>
-
-                            <Spin spinning={joinRoomLoading}>
-
-                                <span>Join Room</span>
-                            </Spin>
-
-                        </button>
+                    <div>
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {passwordError && <p className="text-sm text-red-500 mt-1">{passwordError}</p>}
                     </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4">
+                    <button
+                        type="button"
+                        onClick={handleCreateRoom}
+                        className={`w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center gap-2`}
+                        disabled={loading}
+                    >
+                        <Spin spinning={createRoomLoading}>
+                            <span>Create Room</span>
+                        </Spin>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={handleJoinRoom}
+                        className={`w-full px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center gap-2`}
+                        disabled={loading}
+                    >
+                        <Spin spinning={joinRoomLoading}>
+                            <span>Join Room</span>
+                        </Spin>
+                    </button>
                 </div>
             </div>
         </div>

@@ -99,11 +99,11 @@ const MeetSomeone = () => {
         setAnswers(newAnswers);
     };
 
-    const { loading, error, postData } = usePost<UpdateAppointmentResponse , UpdateAppointmentPayload>('/create-appointments');
+    const { loading, error, postData } = usePost<UpdateAppointmentResponse , UpdateAppointmentPayload>('/create-appointments-by-request');
 
     const handleSubmit = async () => {
         try {
-            const res = await postData({ requested_by: `${id}` || "", time_slot: "9AM" })
+            const res = await postData({ requested_by: `${id}` || "", time_slot: "" })
             console.log(res)
             toast.success("Your appointment had be submitted please wait till the admin approves it");
             goTo("/profile")

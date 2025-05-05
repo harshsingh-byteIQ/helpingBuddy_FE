@@ -118,7 +118,7 @@ const RoleSelect = ({ data }: any) => {
     } catch (err: any) {
       console.log(error)
       toast.error("something went wrong , please try again ");
-  }
+    }
   }
 
   const onFinish = async (values: any) => {
@@ -237,11 +237,12 @@ const RoleSelect = ({ data }: any) => {
                               rules={[{ required: true, message: 'Select a time' }]}
                             >
                               <TimePicker
-                                format="HH:00"
-
+                                use12Hours
+                                format="hh:mm A"
                                 style={{ width: '100%' }}
                                 placeholder="Select time"
                               />
+
                             </Form.Item>
                           </Col>
                         </Row>

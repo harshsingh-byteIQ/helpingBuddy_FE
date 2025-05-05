@@ -1,10 +1,13 @@
 import axios from 'axios';
 
+export const baseURL = 'https://backend-hb.onrender.com/';
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8002/',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
 
 export default axiosInstance;

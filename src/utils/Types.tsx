@@ -103,7 +103,8 @@ export interface userDataManageuser {
   last_name: string,
   email: string,
   role: string,
-  selected_slots: []
+  selected_slots: [],
+  score:number
 }
 
 export interface requestData {
@@ -197,4 +198,24 @@ export interface userDataWithQNA {
   status_code: number,
   message: string,
   data: userDataWithQNAData
+}
+
+export interface questionResponse {
+  questions: string[]
+  answers: string[]
+}
+
+export interface musicResponse {
+  title: string,
+  url: string
+}
+
+export interface ChatBotResponse {
+  data: questionResponse | musicResponse[]
+  status_code : number
+}
+
+export interface ChatBotPayload {
+  keyword?: string,
+  song?: string,
 }

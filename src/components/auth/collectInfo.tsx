@@ -58,7 +58,7 @@ const Question = () => {
     console.log("role in effect:", role);
     const newData = data?.filter((ele: getQuestionResponse) => {
       console.log("Filtering:", ele, "question_for:", ele?.question_for, "vs role:", role);
-      return ele?.question_for === role;
+      return ele?.question_for === "both";
     });
   
     
