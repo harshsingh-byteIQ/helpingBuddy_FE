@@ -10,6 +10,7 @@ import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { Modal } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { baseURL } from "../../utils/axios";
 
 let socket: any = null;
 
@@ -242,7 +243,7 @@ const Room = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            const response = await axios.delete(`http://127.0.0.1:8002/delete-appointment/${id}`);
+            const response = await axios.delete(`${baseURL}delete-appointment/${id}`);
             if (response.status === 200) {
                 toast.success("Appointment closed successfully!");
             } else {

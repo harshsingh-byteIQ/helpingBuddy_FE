@@ -9,6 +9,7 @@ import img from "../../assets/appointment_profile.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { baseURL } from "../../utils/axios";
 
 
 
@@ -27,7 +28,7 @@ const Appointments = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8002/delete-appointment/${id}`);
+      const response = await axios.delete(`${baseURL}/delete-appointment/${id}`);
       if (response.status === 200) {
         refetch()
         toast.success("user deleted successfully!");
