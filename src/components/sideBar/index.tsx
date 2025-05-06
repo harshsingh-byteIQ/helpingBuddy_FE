@@ -113,7 +113,7 @@ const PatientsSideBarOption: menuListType[] = [
   },
   {
     title: "Meet someone",
-    lable: "meet",
+    lable: "Meet",
     Icon: (
       <Icon
         className={styles.icon}
@@ -262,12 +262,9 @@ const SideBar = () => {
   const handlePageChange = (title: string) => {
     try {
       const newMenuList: menuListType[] = menuList.map((ele: menuListType) => {
-        console.log(ele?.title , title , )
-
-        if (ele?.title?.split(" ")?.[0] === title) {
+        if (ele?.title?.split(" ")?.[0] === title ) {
           return {
             ...ele,
-
             className: `${styles.active}`,
           };
         }
@@ -280,7 +277,6 @@ const SideBar = () => {
     } catch (error) {
       console.error(error)
     } finally {
-      console.log(title, "heyy")
       goTo(`/${title}`);
     }
 

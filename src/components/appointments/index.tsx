@@ -28,16 +28,16 @@ const Appointments = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await axios.delete(`${baseURL}/delete-appointment/${id}`);
+      const response = await axios.delete(`${baseURL}delete-appointment/${id}`);
       if (response.status === 200) {
         refetch()
-        toast.success("user deleted successfully!");
+        toast.success("Appointment closed successfully!");
       } else {
         toast.warning("Something went wrong while deleting.");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete the user.");
+      toast.error("Failed to delete the Appointment.");
     }
   }
 
