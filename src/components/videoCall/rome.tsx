@@ -310,48 +310,68 @@ const Room = () => {
 
     const startScreenShare = async () => {
         try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({
+            const screenStream = await navigator.mediaDevices.getDisplayMedia({
                 video: true,
+                audio: true,
+            });
+
+            const micStream = await navigator.mediaDevices.getUserMedia({
                 audio: {
-                    // These options are needed to capture tab/system audio
                     echoCancellation: true,
                     noiseSuppression: true,
-                    sampleRate: 44100
+                    sampleRate: 44100,
                 }
             });
 
-            const screenTrack = stream.getVideoTracks()[0];
-            const audioTrack = stream.getAudioTracks()[0]; // tab/system audio if allowed
+            // Mix both audio streams
+            const audioContext = new AudioContext();
+            const destination = audioContext.createMediaStreamDestination();
 
-            screenTrackRef.current = screenTrack;
-            setScreenStream(stream);
+            // Create sources from each audio stream
+            const systemSource = audioContext.createMediaStreamSource(screenStream);
+            const micSource = audioContext.createMediaStreamSource(micStream);
 
+            // Connect both sources to the destination (mix them)
+            systemSource.connect(destination);
+            micSource.connect(destination);
+
+            // Get video track
+            const screenVideoTrack = screenStream.getVideoTracks()[0];
+            screenTrackRef.current = screenVideoTrack;
+            setScreenStream(screenStream);
+
+            // Replace video track in peer connection
             const videoSender = peerConnection.current.getSenders().find(
                 (sender) => sender.track?.kind === "video"
             );
             if (videoSender) {
-                videoSender.replaceTrack(screenTrack);
+                videoSender.replaceTrack(screenVideoTrack);
             }
 
+            // Get mixed audio track
+            const mixedAudioTrack = destination.stream.getAudioTracks()[0];
+
+            // Replace or add mixed audio track
             const audioSender = peerConnection.current.getSenders().find(
                 (sender) => sender.track?.kind === "audio"
             );
-            if (audioTrack && audioSender) {
-                audioSender.replaceTrack(audioTrack);
-            } else if (audioTrack) {
-                peerConnection.current.addTrack(audioTrack, stream);
+            if (audioSender) {
+                audioSender.replaceTrack(mixedAudioTrack);
+            } else {
+                peerConnection.current.addTrack(mixedAudioTrack, destination.stream);
             }
 
-            screenTrack.onended = () => {
-                stopScreenShare(); // You likely already defined this
+            screenVideoTrack.onended = () => {
+                stopScreenShare(); // reset UI, stream, etc.
             };
 
-            toast.info("You are now screen sharing with audio.");
+            toast.info("You are now screen sharing with mic + tab audio.");
         } catch (err) {
-            console.error("Error sharing screen with audio:", err);
-            toast.error("Screen sharing failed. Make sure you allow tab audio capture.");
+            console.error("Error sharing screen with mixed audio:", err);
+            toast.error("Screen sharing failed.");
         }
     };
+
 
     const stopScreenShare = () => {
         const originalVideoTrack = videoStream?.getVideoTracks()[0];
