@@ -58,7 +58,7 @@ const Room = () => {
     );
 
     useEffect(() => {
-        console.log(screenStream ,)
+        console.log(screenStream);
         const verifyRoom = async (password: any) => {
             try {
                 const response = await fetch(
@@ -95,7 +95,12 @@ const Room = () => {
                             width: { min: 640, ideal: 1280, max: 1920 },
                             height: { min: 400, ideal: 720, max: 1080 },
                         },
-                        audio: true,
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            channelCount: 2,
+                            sampleRate: 44100,
+                        },
                     })
                     .then((stream: any) => {
                         setVideoStream(stream);
@@ -131,6 +136,7 @@ const Room = () => {
                         "Please allow camera and microphone access to join the meeting by clicking on the lock icon in the address bar."
                     );
                 } else {
+                    console.log(err);
                     setError(err.message);
                 }
             })
