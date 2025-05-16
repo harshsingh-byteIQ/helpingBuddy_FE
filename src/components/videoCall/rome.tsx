@@ -312,28 +312,44 @@ const Room = () => {
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: true, 
+                audio: {
+                    // These options are needed to capture tab/system audio
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
+                }
             });
 
             const screenTrack = stream.getVideoTracks()[0];
+            const audioTrack = stream.getAudioTracks()[0]; // tab/system audio if allowed
+
             screenTrackRef.current = screenTrack;
             setScreenStream(stream);
 
             const videoSender = peerConnection.current.getSenders().find(
                 (sender) => sender.track?.kind === "video"
             );
-
             if (videoSender) {
                 videoSender.replaceTrack(screenTrack);
             }
 
+            const audioSender = peerConnection.current.getSenders().find(
+                (sender) => sender.track?.kind === "audio"
+            );
+            if (audioTrack && audioSender) {
+                audioSender.replaceTrack(audioTrack);
+            } else if (audioTrack) {
+                peerConnection.current.addTrack(audioTrack, stream);
+            }
+
             screenTrack.onended = () => {
-                stopScreenShare();
+                stopScreenShare(); // You likely already defined this
             };
 
-            toast.info("You are now screen sharing.");
+            toast.info("You are now screen sharing with audio.");
         } catch (err) {
-            console.error("Error sharing screen:", err);
+            console.error("Error sharing screen with audio:", err);
+            toast.error("Screen sharing failed. Make sure you allow tab audio capture.");
         }
     };
 
