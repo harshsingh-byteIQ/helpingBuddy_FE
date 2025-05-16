@@ -312,7 +312,7 @@ const Room = () => {
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: false, // You can set true if you want to capture audio too
+                audio: true, 
             });
 
             const screenTrack = stream.getVideoTracks()[0];
