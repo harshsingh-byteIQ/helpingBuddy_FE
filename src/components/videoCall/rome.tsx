@@ -6,11 +6,16 @@ import VideoControl from "../VideoCallHealper/components/VideoControl";
 import FullPageLoader from "../VideoCallHealper/components/FullPageLoader";
 import NoUserScreen from "../VideoCallHealper/components/NoUserScreen";
 import FullPageError from "../VideoCallHealper/components/FullPageError";
+import { Excalidraw, exportToCanvas } from "@excalidraw/excalidraw";
+import type {
+    ExcalidrawImperativeAPI,
+} from "@excalidraw/excalidraw/types";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { baseURL } from "../../utils/axios";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/element/types";
 
 let socket: any = null;
 
@@ -39,6 +44,11 @@ const Room = () => {
     const [peerVideoStreamHasAudio, setPeerVideoStreamHasAudio] = useState(false);
     const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
     const screenTrackRef = useRef<MediaStreamTrack | null>(null);
+
+    //white board 
+    const [showWhiteboard, setShowWhiteboard] = useState(false);
+    const excalidrawRef = useRef<ExcalidrawImperativeAPI>(null);
+    const [elements, setElements] = useState<readonly ExcalidrawElement[]>([]);
 
     const peerConnection = useRef(
         new RTCPeerConnection({
@@ -173,6 +183,12 @@ const Room = () => {
         return localStorage.getItem("password") ?? null;
     };
 
+    // useEffect(() => {
+    //     if (socket && roomCode) {
+    //         socket.emit("whiteboard:requestSync", { roomCode });
+    //     }
+    // }, [socket, roomCode]);
+
     const bindEvents = () => {
         socket.on("user-connected", () => {
             peerConnection.current.createOffer().then((offer) => {
@@ -194,6 +210,12 @@ const Room = () => {
                     socket.emit("answer", answer);
                 });
         });
+
+        // socket.on("whiteboard:sync", ({ elements }: any) => {
+        //     if (excalidrawRef.current) {
+        //         excalidrawRef.current.updateScene({ elements });
+        //     }
+        // });
 
         socket.on("answer", (answer: any) => {
             peerConnection.current.setRemoteDescription(
@@ -238,6 +260,7 @@ const Room = () => {
             socket.off("answer");
             socket.off("candidate");
             socket.off("stateChange");
+            // socket.off("whiteboard:sync");
         }
 
         if (peerConnection.current) {
@@ -372,7 +395,6 @@ const Room = () => {
         }
     };
 
-
     const stopScreenShare = () => {
         const originalVideoTrack = videoStream?.getVideoTracks()[0];
 
@@ -406,85 +428,25 @@ const Room = () => {
 
     if (error) return <FullPageError error={error} />;
 
-
-    // const stopRecording = () => {
-    //     if (mediaRecorderRef.current) {
-    //         mediaRecorderRef.current?.stop();
-    //         setIsRecording(false);
-    //     }
-    // };
-
-    // const downloadRecording = () => {
-    //     if (recordedChunks.length === 0) return;
-    //     const blob = new Blob(recordedChunks, { type: "video/webm" });
-    //     const url = URL.createObjectURL(blob);
-    //     const a = document.createElement("a");
-    //     a.href = url;
-    //     a.download = "recording.webm";
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     window.URL.revokeObjectURL(url);
-    // };
-
-    // const startRecording = async () => {
-    //     try {
-    //         const stream = await navigator.mediaDevices.getDisplayMedia({
-    //             video: { mediaSource: "screen" },
-    //             audio: true,
-    //         });
-
-    //         const mediaRecorder = new MediaRecorder(stream, {
-    //             mimeType: "video/webm",
-    //         });
-
-    //         mediaRecorder.ondataavailable = (event: any) => {
-    //             if (event.data.size > 0) {
-    //                 setRecordedChunks((prev: any) => [...prev, event.data]);
-    //             }
-    //         };
-
-    //         mediaRecorder.start();
-    //         mediaRecorderRef.current = mediaRecorder;
-    //         setIsRecording(true);
-    //     } catch (error) {
-    //         console.error("Error starting recording:", error);
-    //     }
-    // };
+    const handleExport = () => {
+        if (excalidrawRef.current) {
+            const canvas = exportToCanvas({
+                elements,
+                appState: {
+                    ...excalidrawRef.current.getAppState(),
+                    exportWithDarkMode: false,
+                },
+                files: excalidrawRef.current.getFiles(),
+            });
+            const link = document.createElement("a");
+            link.download = "drawing.png";
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    };
 
     return (
         <div ref={divRef} className="h-[92vh] relative">
-            {/* <div className="absolute top-4 right-4 z-50 bg-black p-2 rounded-full shadow-lg cursor-pointer">
-                <img
-                    style={{ borderRadius: "10vh", height: "10vh", width: "15vw" }}
-                    src={img}
-                ></img>
-            </div>
-            <div className="absolute top-20 right-6 z-50 bg-black p-2 rounded-full shadow-lg cursor-pointer">
-                {!isRecording ? (
-                    <button
-                        onClick={startRecording}
-                        className="bg-red-500 text-white p-2 rounded"
-                    >
-                        Start Recording
-                    </button>
-                ) : (
-                    <button
-                        onClick={stopRecording}
-                        className="bg-gray-500 text-white p-2 rounded"
-                    >
-                        Stop Recording
-                    </button>
-                )}
-                {recordedChunks.length > 0 && (
-                    <button
-                        onClick={downloadRecording}
-                        className="bg-green-500 text-white p-2 rounded"
-                    >
-                        Download Recording
-                    </button>
-                )}
-            </div> */}
-
             <div className="h-full w-full">
                 {!peerVideoStream && <NoUserScreen />}
                 {peerVideoStream && (
@@ -495,6 +457,7 @@ const Room = () => {
                     />
                 )}
             </div>
+      
 
             <div className="absolute left-1/2 transform -translate-x-1/2 md:translate-x-0 top-6 md:left-6 z-40 border w-[300px] h-[200px] shadow-xl">
                 <VideoPreview
@@ -511,6 +474,10 @@ const Room = () => {
                     isMicOn={videoStreamHasAudio}
                     onToggleVideo={handleVideoToggle}
                     onToggleMute={handleMuteToggle}
+                    isDrawingBoard={showWhiteboard}
+                    onToggleWhiteboard={() => {
+                        setShowWhiteboard(!showWhiteboard);
+                    }}
                     onScreenShare={handleScreenShare}
                     isScreenSharing={isScreenSharing}
                     onEndCall={() => {
@@ -520,6 +487,19 @@ const Room = () => {
                 />
 
             </div>
+
+            {/* <div className="absolute bottom-7 right-6 z-50 space-y-3">
+                <button
+                    onClick={() => {
+                        setShowWhiteboard(!showWhiteboard);
+                    }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                    {showWhiteboard ? "Hide Whiteboard" : "Show Whiteboard"}
+                </button>
+            </div> */}
+
+
             <Modal
                 open={isModalOpen}
                 onClose={() => {
@@ -535,6 +515,44 @@ const Room = () => {
                 }
             >
                 You are ending the meeting , which once done can't be reversed . Please click yes to proceed .
+            </Modal>
+            <Modal
+                title="Whiteboard"
+                open={showWhiteboard}
+                onCancel={() => {
+                    setShowWhiteboard(false)
+                }}
+                footer={[
+                    <Button key="export" onClick={handleExport}>
+                        Export
+                    </Button>,
+                    <Button key="close" type="primary" onClick={() => {
+                        setShowWhiteboard(false)
+                    }}>
+                        Close
+                    </Button>,
+                ]}
+                width="90vw"
+                style={{ top: 20 }}
+                bodyStyle={{ height: "80vh", padding: 0 }}
+                destroyOnClose
+            >
+                <div style={{ height: "100%", width: "100%" }}>
+                    <Excalidraw
+                        onChange={(elements) => {
+                            setElements(elements);
+
+                            if (socket && socket.connected && roomCode) {
+                                socket.emit("whiteboard:update", { elements, roomCode });
+                            }
+                        }}
+                        initialData={{
+                            elements: [],
+                            appState: { viewBackgroundColor: "#ffffff" },
+                        }}
+                    />
+
+                </div>
             </Modal>
         </div>
     );

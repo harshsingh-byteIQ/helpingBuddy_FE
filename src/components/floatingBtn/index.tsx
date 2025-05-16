@@ -48,9 +48,9 @@ const ChatbotTrigger = () => {
 
   const hideChatbot = () => {
     setIsModalVisible(false);
-    setMessages([]);
-    setSelectedTab("");
-    setInputValue("");
+    // setMessages([]);
+    // setSelectedTab("");
+    // setInputValue("");
   };
 
   const handleOptionSelect = (option: string) => {
